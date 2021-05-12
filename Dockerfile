@@ -21,6 +21,9 @@ ENV PG_POOL_SIZE=500
 
 COPY . /home/market/
 
+
+RUN npm install 
+
 CMD ["node", "/home/market/src/index.js"]
 
 
