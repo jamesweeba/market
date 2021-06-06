@@ -24,18 +24,22 @@ module.exports = {
 					});
 			})
 			.catch((err) => {
+			
 				let params = { statusCode: 500, res, client };
 				api.transactions(params);
 			});
 	},
 
 	signup: function (req, res) {
+		let db=null
 		pg.connect()
 			.then((client) => {
+				db=client
 				let payload = req.body;
 				controller
 					.signup(client, payload)
 					.then((result) => {
+						console.log(result['items'])
 						let role = result['items'][0].role;
 						if (role != 'manager') {
 							let param = { payload, client, result };
@@ -53,12 +57,12 @@ module.exports = {
 					.catch((err) => {
 						console.log(err);
 						let params = { statusCode: 500, res, client };
-						api.transactions(params);
+						 api.transactions(params);
 					});
 			})
 			.catch((err) => {
 				console.log(err);
-				let params = { statusCode: 500, res, client };
+				let params = { statusCode: 500, res, db };
 				api.transactions(params);
 			});
 	},

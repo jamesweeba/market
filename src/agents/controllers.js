@@ -4,7 +4,66 @@ const validations = require('../utils/validation').validate;
 const schema = require('./schema');
 
 module.exports = {
-	createAgent: (client, param) => {},
+	createAgent: (client, param) => {
+            return new Promise((resolve,reject)=>{
+
+				let payload = {
+					action: 'create',
+					fields: [...Object.keys(param)],
+					table: 'agents',
+				};
+
+				let sql = sqlcall.sqlCalls(payload);
+		    	let params = payload.fields.map((field) => param[field] != null && param[field]);
+			pg.insert(client, sql, params)
+				.then((user) => {
+					return resolve(user.data);
+				})
+				.catch((err) => {
+					console.log(err);
+					return reject(err);
+				});
+		});
+
+
+			
+
+
+			/*
+			createUsers: function (userPaylaod) {
+		return new Promise((resolve, reject) => {
+			let dbConnection = userPaylaod.client;
+			delete userPaylaod.client;
+
+			let createUserSchema = schema.createUserSchema;
+			let status = validations(createUserSchema, userPaylaod);
+
+			if (!status.isValid) {
+				return resolve({ statusCode: 400, message: status.err.errors });
+			}
+			let payload = {
+				action: 'create',
+				fields: [...Object.keys(userPaylaod)],
+				table: 'users',
+			};
+			let sql = sqlcall.sqlCalls(payload);
+			let params = payload.fields.map((field) => userPaylaod[field] != null && userPaylaod[field]);
+			pg.insert(dbConnection, sql, params)
+				.then((user) => {
+					return resolve(user.data);
+				})
+				.catch((err) => {
+					console.log(err);
+					return reject(err);
+				});
+		});
+	},
+
+
+			*/
+
+
+	},
 
 	getAgents: (client, param) => {
 		return new Promise((resolve, reject) => {
@@ -20,8 +79,8 @@ module.exports = {
 				table: 'agents',
 			};
 			let sql = sqlcall.sqlCalls(payload);
-
 			let params = payload.filters.map((field) => param[field] != null && param[field]);
+			// console.log(sql,params)
 			pg.fetch(client, sql, params)
 				.then((result) => {
 					return resolve(result.data);

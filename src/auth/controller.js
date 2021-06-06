@@ -4,7 +4,7 @@ const base64 = require('base-64');
 const validations = require('../utils/validation').validate;
 const schema = require('./schema');
 const { hashUserPassword, jwtGenerator, msisdnValidator } = require('../utils/commons');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
 	login: function (client, data) {
@@ -36,9 +36,12 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			let signupSchema = schema.signupSchema;
 			let status = validations(signupSchema, data);
+
 			if (!status.isValid) {
+				console.log(status.err.errors);
 				return resolve({ statusCode: 400, message: status.err.errors });
 			}
+
 			let password = hashUserPassword(data.password);
 			let contact = msisdnValidator(data.contact);
 			if (contact.errors) {
@@ -56,6 +59,7 @@ module.exports = {
 			};
 			let sql = sqlcall.sqlCalls(payload);
 			let params = payload.fields.map((field) => data[field] != null && data[field]);
+
 			pg.insert(client, sql, params)
 				.then((user) => {
 					delete user.data['items'][0].password;
@@ -104,7 +108,7 @@ function validateEmail(client, data) {
 	return new Promise((resolve, reject) => {
 		let payload = {
 			action: 'fetchLogin',
-			fields: ['password,first_name,last_name,contact,email'],
+			fields: ['password,first_name,last_name,contact,email,id'],
 			table: 'users',
 			filters: ['email'],
 		};

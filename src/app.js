@@ -22,18 +22,19 @@ module.exports = {
 		var swaggerDefinition = {
 			info: {
 				title: 'KAYAYO API',
-				version: '1.0.0',
+				version: '3.0.0',
 				description: 'Demonstrating how to describe a RESTful API with Swagger',
 			},
-			host: 'localhost:1900',
-			basePath: '/',
+
+			host: 'http://localhost:1900',
+			basePath: '/api/v1',
 		};
 
 		var options = {
 			// import swaggerDefinitions
 			swaggerDefinition: swaggerDefinition,
 			// path to the API docs
-			apis: ['./users/routes.js','./orders/routes.js'],
+			apis: ["./users/routes.js"],
 		};
 
 		var swaggerSpec = swaggerJSDoc(options);

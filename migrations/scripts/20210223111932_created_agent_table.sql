@@ -25,7 +25,7 @@ email varchar ,
 status varchar not null  default 'ACTIVE',
 market_id int not null,
 rating_id int not null default 0,
-state_id int not null default 2
+state_id int not null default 3
 
 )
 

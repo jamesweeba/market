@@ -9,19 +9,35 @@ module.exports = {
 			.then((client) => {
 				let data = req.body;
 				data.user_id = req.user.id;
-
 				controller
 					.orders(client, data)
 					.then((result) => {
 						data['result'] = result;
-						let agentParam = { market_id: result['items'][0].market, state_id: 4, page: 1000, limit: 0 };
+						let agentParam = {
+							market_id: parseInt(result['items'][0].market),
+							state_id: 3,
+							page: 0,
+							limit: 1000,
+						};
 						return agent.getAgents(client, agentParam);
 					})
 					.then((agent) => {
+						if(agent.count==0){
+								params = { statusCode: 404, res, client, result: "NO AGENTS FOR SELECT MARKETS" };
+							api.transactions(params);
+							return
+						}
 						let { result } = data;
-						//do a random number generation hereee
-						let agentId = { agent_id: agent['items'][0].id, id: result['items'][0].id };
+						let total = agent.count;
+						let random = Math.ceil(Math.random() * total);
+						let agentId = { agent_id: agent['items'][random - 1].id, id: result['items'][0].id };
+						data['agent'] = agent['items'][random - 1];
 						return controller.updateOrder(client, agentId);
+					})
+					.then(() => {
+						let gold = 2;
+						let param = { state_id: gold, id: data['agent'].id };
+						return agent.updateAgent(client, param);
 					})
 					.then(() => {
 						let { result } = data;
@@ -154,21 +170,30 @@ module.exports = {
 					.then((result) => {
 						data['result'] = result;
 						let params = {
-							state_id: 1,
+							state_id: 3,
 							id: result.agent_id,
 						};
+
 						return agent.updateAgent(client, params);
 					})
 					.then(() => {
 						let { result } = data;
-						let agentParam = { market_id: result.market, page: 1000, limit: 0 };
+						let agentParam = { market_id: parseInt(result.market), state_id: 3, page: 0, limit: 1000 };
 						return agent.getAgents(client, agentParam);
 					})
-					.then((agent) => {
+					.then((agents) => {
+						let total = agents.count;
+						let random = Math.ceil(Math.random() * total);
 						let data = {
 							id: req.params.id,
-							agent_id: agent.items[0].id,
+							agent_id: agents.items[random - 1].id,
 						};
+						let gold = 2;
+						let param = {
+							id: data['agent_id'],
+							state_id: gold,
+						};
+						agent.updateAgent(client, param);
 						return controller.updateOrder(client, data);
 					})
 					.then(() => {

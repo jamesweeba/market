@@ -10,23 +10,28 @@ services:
         build: .
         
         networks:
-            - app-network
+          - app-network
          
-            mydb:
-                image: postgres
-                volumes:
-                - db-data:/var/lib/postgresql/data
-                ports:
-                - 5432:5432
-                networks: 
-                - app-network
-                environment: 
-                - POSTGRES_USER=quaci
-                - POSTGRES_PASSWORD=kayayo
-                 
-                volumes:
-                db-data:
-                driver: local
+    mydb:
+        image: postgres
+        volumes:
+            - db-data:/var/lib/postgresql/data
+            # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+          - 5432:5432
+        networks: 
+          - app-network
+        environment: 
+          # - POSTGRES_USER=quaci
+          # - POSTGRES_PASSWORD=kayayo
+          POSTGRES_USER: quaci
+          POSTGRES_PASSWORD: kayayo
+          # POSTGRES_DB: quaci
+          # - POSTGRES_DB=quaci
+          # - POSTGRES_HOST_AUTH_METHOD=trust
+volumes:
+   db-data:
+    driver: local
        
     
 networks:

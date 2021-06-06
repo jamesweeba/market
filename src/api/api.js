@@ -10,7 +10,7 @@ module.exports = {
 				break;
 			case 404:
 				res.status(statusCode).json(result ? result : 'NOT FOUND');
-				pg.rollback(client);
+				pg.commit(client);
 				break;
 			case 400:
 				res.status(statusCode).json(result);
