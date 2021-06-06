@@ -1,17 +1,13 @@
-# vienHealth
+# KAYAYO
 
 kayayo
 
-# REST API VIEN application
+# REST API KAYAYO application
 
 
 The entry point for this application  within the `index.js` file.
 
 
-
-## Install
-
-    npm install
 
 ## Run the app
 
@@ -19,11 +15,11 @@ The entry point for this application  within the `index.js` file.
 
 ## Run the tests
 
-    npm run test
+    not ready yet
 
 # REST API
 
-The REST API to the users registration and login is described below.
+The REST API for KAYAYO APP.
 
 ## Register a user
 
@@ -130,7 +126,7 @@ curl --location --request POST 'http://localhost:1900/api/v1/auth/signups' \
 }
 
 
-## Craete or make request
+## Create or make request
 
 ### Request
 
