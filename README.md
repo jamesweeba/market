@@ -11,7 +11,7 @@ The entry point for this application  within the `index.js` file.
 
 ## Run the app
 
-    npm run start
+    docker-compose up
 
 ## Run the tests
 
